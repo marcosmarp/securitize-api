@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WalletsModule } from './wallets/wallets.module';
 import { ExchangeRatesModule } from './exchange_rates/exchange_rates.module';
-import { Wallet } from './wallets/wallet.entity';
-import { ExchangeRate } from './exchange_rates/exchange_rate.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -30,7 +31,5 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     WalletsModule,
     ExchangeRatesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
