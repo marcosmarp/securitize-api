@@ -19,4 +19,10 @@ export class WalletDto {
 
   @ApiProperty()
   isOld: boolean;
+
+  @ApiProperty()
+  balanceInUsd: number;
+
+  @ApiProperty()
+  balanceInEur: number;
 }

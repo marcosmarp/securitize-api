@@ -8,12 +8,15 @@ import { InjectMapper } from '@automapper/nestjs';
 import { WalletDto } from './dtos/wallet.read.dto';
 import { WalletUpdateDto } from './dtos/wallet.update.dto';
 import { EtherscanService } from 'src/etherscan/etherscan.service';
+import { ExchangeRate } from '../exchange_rates/exchange_rate.entity';
 
 @Injectable()
 export class WalletsService {
   constructor(
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
+    @InjectRepository(ExchangeRate)
+    private readonly exchangeRatesRepository: Repository<ExchangeRate>,
     @InjectMapper() private readonly mapper: Mapper,
     private readonly etherscanService: EtherscanService,
   ) {}
@@ -56,6 +59,13 @@ export class WalletsService {
 
     dto.isOld = await this.etherscanService.getIsWalletOld(dto.address);
     dto.balance = await this.etherscanService.getWalletBalance(dto.address);
+
+    const exchangeRates = await this.exchangeRatesRepository.find();
+    const usdExchangeRate = exchangeRates.filter((x) => x.source === 'USD');
+    const eurExchangeRate = exchangeRates.filter((x) => x.source === 'EUR');
+
+    dto.balanceInUsd = dto.balance * usdExchangeRate[0].rate;
+    dto.balanceInEur = dto.balance * eurExchangeRate[0].rate;
 
     return dto;
   }

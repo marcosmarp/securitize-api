@@ -6,10 +6,17 @@ import { WalletsController } from './wallets.controller';
 import { WalletsProfile } from './automapper.profile';
 import { EtherscanService } from '../etherscan/etherscan.service';
 import { HttpModule } from '@nestjs/axios';
+import { ExchangeRatesService } from '../exchange_rates/exchange_rates.service';
+import { ExchangeRate } from '../exchange_rates/exchange_rate.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Wallet]), HttpModule],
-  providers: [WalletsService, WalletsProfile, EtherscanService],
+  imports: [TypeOrmModule.forFeature([Wallet, ExchangeRate]), HttpModule],
+  providers: [
+    WalletsService,
+    WalletsProfile,
+    EtherscanService,
+    ExchangeRatesService,
+  ],
   controllers: [WalletsController],
 })
 export class WalletsModule {}

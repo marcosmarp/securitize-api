@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 const ETHERSCAN_API_URL = 'https://api.etherscan.io/api';
-const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 @Injectable()
 export class EtherscanService {
@@ -16,7 +15,7 @@ export class EtherscanService {
           action: 'balance',
           address,
           tag: 'latest',
-          apikey: ETHERSCAN_API_KEY,
+          apikey: process.env.ETHERSCAN_API_KEY,
         },
       })
       .toPromise();
@@ -35,7 +34,7 @@ export class EtherscanService {
           startblock: 0,
           endblock: 99999999999999,
           sort: 'asc',
-          apikey: ETHERSCAN_API_KEY,
+          apikey: process.env.ETHERSCAN_API_KEY,
         },
       })
       .toPromise();
