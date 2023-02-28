@@ -13,4 +13,10 @@ export class WalletDto {
   @AutoMap()
   @ApiProperty()
   favorite: boolean;
+
+  @ApiProperty()
+  balance: number;
+
+  @ApiProperty()
+  isOld: boolean;
 }

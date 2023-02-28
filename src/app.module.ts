@@ -5,6 +5,8 @@ import { ExchangeRatesModule } from './exchange_rates/exchange_rates.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { EtherscanService } from './etherscan/etherscan.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -28,8 +30,10 @@ import { classes } from '@automapper/classes';
         ssl: true,
       }),
     }),
+    HttpModule.register({}),
     WalletsModule,
     ExchangeRatesModule,
   ],
+  providers: [EtherscanService],
 })
 export class AppModule {}

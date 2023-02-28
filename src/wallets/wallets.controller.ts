@@ -39,6 +39,17 @@ export class WalletsController {
     return this.walletsService.findAll();
   }
 
+  @ApiOperation({ summary: 'Find a wallet by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The wallet has been successfully retrieved.',
+  })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.walletsService.findOne(id);
+  }
+
   @ApiOperation({ summary: 'Update a wallet' })
   @ApiResponse({
     status: 200,

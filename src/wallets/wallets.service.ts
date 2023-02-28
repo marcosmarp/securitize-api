@@ -7,6 +7,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { WalletDto } from './dtos/wallet.read.dto';
 import { WalletUpdateDto } from './dtos/wallet.update.dto';
+import { EtherscanService } from 'src/etherscan/etherscan.service';
 
 @Injectable()
 export class WalletsService {
@@ -14,6 +15,7 @@ export class WalletsService {
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly etherscanService: EtherscanService,
   ) {}
 
   /**
@@ -39,6 +41,23 @@ export class WalletsService {
   public async findAll() {
     const wallets = await this.walletRepository.find();
     return await this.mapper.mapArrayAsync(wallets, Wallet, WalletDto);
+  }
+
+  /**
+   * Find a wallet by id
+   * @param id
+   * @returns WalletDto
+   */
+  public async findOne(id: string) {
+    const wallet = await this.walletRepository.findOneOrFail({
+      where: { id },
+    });
+    const dto = await this.mapper.mapAsync(wallet, Wallet, WalletDto);
+
+    dto.isOld = await this.etherscanService.getIsWalletOld(dto.address);
+    dto.balance = await this.etherscanService.getWalletBalance(dto.address);
+
+    return dto;
   }
 
   /**
