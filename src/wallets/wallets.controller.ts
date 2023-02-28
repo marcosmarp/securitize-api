@@ -25,7 +25,7 @@ export class WalletsController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @Post()
   async createWallet(@Body() dto: WalletCreationDto) {
-    this.walletsService.create(dto);
+    return this.walletsService.create(dto);
   }
 
   @ApiOperation({ summary: 'Find all wallets' })
@@ -47,7 +47,7 @@ export class WalletsController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @Put(':id')
   async updateWallet(@Param('id') id: string, @Body() dto: WalletUpdateDto) {
-    this.walletsService.update(id, dto);
+    return this.walletsService.update(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete a wallet' })
@@ -58,6 +58,6 @@ export class WalletsController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @Delete(':id')
   async deleteWallet(@Param('id') id: string) {
-    this.walletsService.delete(id);
+    return this.walletsService.delete(id);
   }
 }

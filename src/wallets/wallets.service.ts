@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
@@ -18,11 +18,19 @@ export class WalletsService {
 
   /**
    * Create a new wallet
-   * @returns void
+   * @returns string
    */
   public async create(dto: WalletCreationDto) {
+    const existingAddress = await this.walletRepository.findOne({
+      where: { address: dto.address },
+    });
+
+    if (existingAddress)
+      throw new BadRequestException('Address already exists');
+
     const entity = this.walletRepository.create(dto);
-    this.walletRepository.save(entity);
+    await this.walletRepository.save(entity);
+    return await entity.id;
   }
 
   /**
