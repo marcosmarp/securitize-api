@@ -40,6 +40,8 @@ export class EtherscanService {
       })
       .toPromise();
 
+    if (response.data.result.length === 0) return false;
+
     const transactionTimestamp = response.data.result[0].timeStamp;
     const currentTimestamp = Date.now();
     const differenceInMilliseconds = currentTimestamp - transactionTimestamp;
